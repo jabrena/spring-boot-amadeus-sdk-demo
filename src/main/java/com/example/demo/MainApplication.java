@@ -32,10 +32,10 @@ class WebConfig {
 
     public static Logger logger = LoggerFactory.getLogger(WebConfig.class);
 
-    @Value("${AMADEUS_CLIENT_ID:PENDING_AMADEUS_CLIENT_ID}")
+    @Value("${CLIENT_ID}")
     private String AMADEUS_CLIENT_ID;
 
-    @Value("${AMADEUS_CLIENT_SECRET:PENDING_AMADEUS_CLIENT_SECRET}")
+    @Value("${SECRET}")
     private String AMADEUS_CLIENT_SECRET;
 
     @PostConstruct
@@ -54,15 +54,21 @@ class WebConfig {
 @RestController
 class WebController {
 
+    public static Logger logger = LoggerFactory.getLogger(WebController.class);
+
     @Autowired
     private Amadeus amadeus;
 
     @GetMapping("/api/v1/covid-restrictions")
-    public ResponseEntity<String> getCOVIDRestrictions(@RequestParam String countryCode) throws ResponseException {
-        DiseaseAreaReport diseaseAreaReport = amadeus.dutyOfCare.diseases.covid19AreaReport.get(
-            Params.with("countryCode", countryCode)
-        ); //.and("cityCode", "MAD")
-
-        return ResponseEntity.ok().body("Hello World");
+    public ResponseEntity<String> getCOVIDRestrictions(@RequestParam(name = "country-code") String countryCode) {
+        try {
+            DiseaseAreaReport diseaseAreaReport = amadeus.dutyOfCare.diseases.covid19AreaReport.get(
+                Params.with("countryCode", countryCode)
+            );
+            return ResponseEntity.ok().body(diseaseAreaReport.toString());
+        } catch (ResponseException e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.internalServerError().body("Something goes wrong");
+        }
     }
 }

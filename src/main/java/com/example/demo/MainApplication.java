@@ -32,10 +32,10 @@ class WebConfig {
 
     public static Logger logger = LoggerFactory.getLogger(WebConfig.class);
 
-    @Value("${AMADEUS_CLIENT_ID}")
+    @Value("${AMADEUS_CLIENT_ID:PENDING_AMADEUS_CLIENT_ID}")
     private String AMADEUS_CLIENT_ID;
 
-    @Value("${AMADEUS_CLIENT_SECRET}")
+    @Value("${AMADEUS_CLIENT_SECRET:PENDING_AMADEUS_CLIENT_SECRET}")
     private String AMADEUS_CLIENT_SECRET;
 
     @PostConstruct

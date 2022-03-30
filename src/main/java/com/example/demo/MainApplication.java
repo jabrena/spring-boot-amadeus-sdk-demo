@@ -39,7 +39,8 @@ class AmadeusConfig {
         logger.info("Loading environment variables:");
         logger.info("AMADEUS_CLIENT_ID: {}", AMADEUS_CLIENT_ID);
         logger.info("AMADEUS_CLIENT_SECRET: {}", AMADEUS_CLIENT_SECRET);
-        return Amadeus.builder(AMADEUS_CLIENT_ID, AMADEUS_CLIENT_SECRET).build();
+
+        return Amadeus.builder(AMADEUS_CLIENT_ID, AMADEUS_CLIENT_SECRET).setLogLevel("debug").build();
     }
 }
 

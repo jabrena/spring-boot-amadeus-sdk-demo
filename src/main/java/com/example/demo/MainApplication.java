@@ -28,25 +28,18 @@ public class MainApplication {
 }
 
 @Configuration
-class WebConfig {
+class AmadeusConfig {
 
-    public static Logger logger = LoggerFactory.getLogger(WebConfig.class);
+    public static Logger logger = LoggerFactory.getLogger(AmadeusConfig.class);
 
-    @Value("${CLIENT_ID}")
-    private String AMADEUS_CLIENT_ID;
-
-    @Value("${SECRET}")
-    private String AMADEUS_CLIENT_SECRET;
-
-    @PostConstruct
-    private void postConstruct() {
+    @Bean
+    public Amadeus getAmadeusBean(
+        @Value("${CLIENT_ID}") String AMADEUS_CLIENT_ID,
+        @Value("${SECRET}") String AMADEUS_CLIENT_SECRET
+    ) {
         logger.info("Loading environment variables:");
         logger.info("AMADEUS_CLIENT_ID: {}", AMADEUS_CLIENT_ID);
         logger.info("AMADEUS_CLIENT_SECRET: {}", AMADEUS_CLIENT_SECRET);
-    }
-
-    @Bean
-    public Amadeus getAmadeusBean() {
         return Amadeus.builder(AMADEUS_CLIENT_ID, AMADEUS_CLIENT_SECRET).build();
     }
 }
@@ -68,6 +61,11 @@ class WebController {
             return ResponseEntity.ok().body(diseaseAreaReport.toString());
         } catch (ResponseException e) {
             logger.error(e.getMessage());
+            if (e.getMessage().contains("[401]")) {
+                return ResponseEntity.internalServerError().body("Something goes wrong internally");
+            } else if (e.getMessage().contains("[400]")) {
+                return ResponseEntity.badRequest().body("Review parameters in the request");
+            }
             return ResponseEntity.internalServerError().body("Something goes wrong");
         }
     }

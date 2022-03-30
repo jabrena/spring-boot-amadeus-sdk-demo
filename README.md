@@ -3,10 +3,12 @@
 ## Motivation
 
 Sometimes, I need to travel in Europe or cross the Atlantic ocean but
-after 2 years of COVID, before travelling I need to review country restrictions
+after 2 years of COVID, before travelling I need to review the country restrictions
 defined for travellers.
 
-Amadeus for developers provides an API for that and it offer information for 200 countries.
+## Value
+
+This example show how to see COVID restrictions in a particular [country](https://www.iso.org/iso-3166-country-codes.html).
 
 ## How to use it?
 
@@ -35,6 +37,12 @@ docker run \
     -e AMADEUS_CLIENT_ID=$AMADEUS_CLIENT_ID \
     -e AMADEUS_CLIENT_SECRET=$AMADEUS_CLIENT_SECRET \
     -t docker.io/library/spring-boot-amadeus-sdk-demo:0.1.0-SNAPSHOT
+```
+
+## How to test the example?
+
+```
+curl 'http://localhost:8080/api/v1/covid-restrictions?country-code=ES'
 ```
 
 ## Others commands

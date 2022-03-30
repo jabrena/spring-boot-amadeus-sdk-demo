@@ -27,23 +27,31 @@ export AMADEUS_CLIENT_SECRET=YOUR_CLIENT_SECRET
 mvn spring-boot:run
 mvn clean package
 java -jar ./target/spring-boot-amadeus-sdk-demo-0.1.0-SNAPSHOT.jar
+curl 'http://localhost:8080/api/v1/covid-restrictions?country-code=ES'
 ```
 
 ## How to run as a Docker Container?
 
 ```
 mvn spring-boot:build-image
-docker run \
+docker run -p 8080:8080 \
     -e AMADEUS_CLIENT_ID=$AMADEUS_CLIENT_ID \
     -e AMADEUS_CLIENT_SECRET=$AMADEUS_CLIENT_SECRET \
     -t docker.io/library/spring-boot-amadeus-sdk-demo:0.1.0-SNAPSHOT
 ```
 
-## How to test the example?
+To test the container, you need to get the IP from the container:
 
 ```
-curl 'http://localhost:8080/api/v1/covid-restrictions?country-code=ES'
+docker-machine ip xxx
 ```
+
+With that IP, you can execute curl without any issue:
+
+```
+curl 'http://IP_FROM_CONTAINER:8080/api/v1/covid-restrictions?country-code=ES'
+```
+
 
 ## Others commands
 
@@ -51,3 +59,8 @@ curl 'http://localhost:8080/api/v1/covid-restrictions?country-code=ES'
 mvn prettier:write
 mvn versions:display-dependency-updates
 ```
+
+# References
+
+- https://docs.docker.com/network/network-tutorial-standalone/
+

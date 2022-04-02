@@ -34,6 +34,7 @@ curl 'http://localhost:8080/api/v1/covid-restrictions?country-code=ES'
 
 ```
 mvn spring-boot:build-image
+docker build -t docker.io/library/spring-boot-amadeus-sdk-demo:0.1.0-SNAPSHOT .
 docker run -p 8080:8080 \
     -e AMADEUS_CLIENT_ID=$AMADEUS_CLIENT_ID \
     -e AMADEUS_CLIENT_SECRET=$AMADEUS_CLIENT_SECRET \
@@ -63,4 +64,5 @@ mvn versions:display-dependency-updates
 # References
 
 - https://docs.docker.com/network/network-tutorial-standalone/
+- https://spring.io/guides/gs/spring-boot-docker/
 

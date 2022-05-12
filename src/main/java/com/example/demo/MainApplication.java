@@ -4,11 +4,11 @@ import com.amadeus.Amadeus;
 import com.amadeus.Params;
 import com.amadeus.exceptions.ResponseException;
 import com.amadeus.resources.DiseaseAreaReport;
+import java.util.Objects;
 import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -31,16 +31,32 @@ class AmadeusConfig {
 
     public static Logger logger = LoggerFactory.getLogger(AmadeusConfig.class);
 
+    final String AMADEUS_CLIENT_ID;
+    final String AMADEUS_CLIENT_SECRET;
+    final Amadeus amadeus;
+
+    public AmadeusConfig() {
+        this.AMADEUS_CLIENT_ID =
+            (Objects.isNull(System.getenv("AMADEUS_CLIENT_ID")))
+                ? "PENDING_AMADEUS_CLIENT_ID"
+                : System.getenv("AMADEUS_CLIENT_ID");
+        this.AMADEUS_CLIENT_SECRET =
+            (Objects.isNull(System.getenv("AMADEUS_CLIENT_SECRET")))
+                ? "PENDING_AMADEUS_CLIENT_ID"
+                : System.getenv("AMADEUS_CLIENT_SECRET");
+        this.amadeus = Amadeus.builder(AMADEUS_CLIENT_ID, AMADEUS_CLIENT_SECRET).build();
+    }
+
     @Bean
-    public Amadeus getAmadeusBean(
-        @Value("${CLIENT_ID}") String AMADEUS_CLIENT_ID,
-        @Value("${SECRET}") String AMADEUS_CLIENT_SECRET
-    ) {
+    public Amadeus getAmadeusBean() {
+        return Amadeus.builder(AMADEUS_CLIENT_ID, AMADEUS_CLIENT_SECRET).setLogLevel("debug").build();
+    }
+
+    @PostConstruct
+    public void init() {
         logger.info("Loading environment variables:");
         logger.info("AMADEUS_CLIENT_ID: {}", AMADEUS_CLIENT_ID);
         logger.info("AMADEUS_CLIENT_SECRET: {}", AMADEUS_CLIENT_SECRET);
-
-        return Amadeus.builder(AMADEUS_CLIENT_ID, AMADEUS_CLIENT_SECRET).setLogLevel("debug").build();
     }
 }
 
